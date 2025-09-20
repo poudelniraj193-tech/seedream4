@@ -1,219 +1,84 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Seedream 4.0 — Niraj’s Free Photo Generator</title>
-  <meta name="theme-color" content="#111827" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seedream 4.0 – Free AI Photo Generator</title>
+
+  <!-- App Icons -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="Logo.jpg" type="image/jpeg">
+  <meta name="theme-color" content="#ef4444">
+
+  <!-- Styles -->
   <style>
-    :root { --bg:#0b0f19; --fg:#e5e7eb; --muted:#9ca3af; --card:#111827; --btn:#1f2937; --accent:#ef4444; }
-    *{box-sizing:border-box}
-    html,body{margin:0;height:100%;background:linear-gradient(180deg,#0b0f19,#0a0e16 60%);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;color:var(--fg)}
-    .wrap{max-width:900px;margin:0 auto;padding:16px 16px 80px}
-    header{display:flex;align-items:center;gap:12px;margin:8px 0 16px}
-    .logo{width:42px;height:42px;border-radius:10px;background:radial-gradient(circle at 30% 20%,#f43f5e,#ef4444 60%,#dc2626);box-shadow:0 10px 30px rgba(239,68,68,.3)}
-    h1{font-size:22px;margin:0}
-    p.sub{margin:4px 0 0;color:var(--muted);font-size:13px}.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(6px);border-radius:16px;padding:14px}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-input,select,button,textarea{width:100%;border:none;border-radius:12px;padding:12px 14px;background:#0f172a;color:var(--fg);outline:none}
-textarea{min-height:72px;resize:vertical}
-select{appearance:none}
-button{cursor:pointer;background:linear-gradient(180deg,#1f2937,#0f172a);border:1px solid rgba(255,255,255,.08)}
-button.primary{background:linear-gradient(180deg,#ef4444,#b91c1c);color:#fff;font-weight:700;border:none}
-button.small{padding:8px 10px;border-radius:10px;font-size:13px}
-
-.preview{margin-top:12px;display:grid;place-items:center;min-height:260px;border-radius:14px;background:#0a0f18;border:1px dashed rgba(255,255,255,.08)}
-.preview img{max-width:100%;border-radius:12px}
-
-.toolbar{display:flex;gap:10px;flex-wrap:wrap}
-.toolbar button{flex:1}
-
-.gallery{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-.tile{position:relative;background:#0a0f18;border:1px solid rgba(255,255,255,.06);border-radius:12px;overflow:hidden}
-.tile img{display:block;width:100%;height:140px;object-fit:cover}
-.tile .cap{position:absolute;inset:auto 0 0 0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.65));color:#e5e7eb;font-size:11px;padding:6px 8px}
-
-footer{position:fixed;inset:auto 0 0 0;background:linear-gradient(180deg,rgba(0,0,0,0),#000 20%);padding:12px 16px}
-.foot{display:flex;gap:10px}
-.foot button{flex:1}
-
-.muted{color:var(--muted);font-size:12px}
-.hint{font-size:12px;color:#93c5fd}
-
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      color: #333;
+      text-align: center;
+    }
+    header {
+      background: #ef4444;
+      color: white;
+      padding: 20px;
+    }
+    header img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+    }
+    h1 {
+      margin: 10px 0 0 0;
+      font-size: 24px;
+    }
+    p.sub {
+      margin: 5px 0 15px 0;
+      font-size: 14px;
+      color: #f0f0f0;
+    }
+    main {
+      padding: 20px;
+    }
+    button {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #d63636;
+    }
+    footer {
+      margin-top: 40px;
+      padding: 10px;
+      font-size: 12px;
+      color: #666;
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="logo"></div>
-      <div>
-        <h1>Seedream 4.0</h1>
-        <p class="sub">Niraj’s personal photo generator — free & mobile-friendly</p>
-      </div>
-    </header><section class="card" aria-label="prompt">
-  <div class="row">
-    <textarea id="prompt" placeholder="Describe your dream image… e.g., 'luxury rooftop dinner, cinematic 4K, NYC skyline'"></textarea>
-  </div>
-  <div class="row" style="margin-top:10px">
-    <select id="model">
-      <option value="flux">Model: flux (quality)</option>
-      <option value="turbo">Model: turbo (fast)</option>
-    </select>
-    <select id="ratio">
-      <option value="square">Size: 1024 × 1024</option>
-      <option value="landscape">Size: 1440 × 1024</option>
-      <option value="portrait">Size: 1024 × 1440</option>
-    </select>
-  </div>
-  <div class="row" style="margin-top:10px">
-    <button id="go" class="primary">Generate</button>
-    <button id="randomize">Shuffle Seed</button>
-  </div>
-  <div class="preview" id="stage">
-    <span class="muted">Your image will appear here</span>
-  </div>
-  <div class="toolbar" style="margin-top:10px">
-    <button id="download" class="small">Download</button>
-    <button id="share" class="small">Share</button>
-    <button id="save" class="small">Save to Gallery</button>
-    <button id="clear" class="small">Clear Gallery</button>
-  </div>
-  <p class="hint" style="margin-top:8px">Tip: Long-press the image to open in a new tab if your device blocks direct downloads.</p>
-</section>
 
-<section style="margin-top:14px">
-  <h3 style="margin:0 0 8px 0;font-size:16px">My gallery</h3>
-  <div class="gallery" id="gallery"></div>
-</section>
+  <header>
+    <img src="Logo.jpg" alt="App Logo">
+    <h1>Seedream 4.0</h1>
+    <p class="sub">Free AI Photo Generator</p>
+  </header>
 
-  </div>  <footer>
-    <div class="foot">
-      <button id="install">Add to Home Screen</button>
-      <button id="how">How it works</button>
-    </div>
-    <p class="muted" style="margin-top:8px;text-align:center">© 2025 Niraj Paudel — Seedream 4.0</p>
-  </footer>  <script>
-    const API = 'https://image.pollinations.ai/prompt/';
-    const promptEl = document.getElementById('prompt');
-    const modelEl = document.getElementById('model');
-    const ratioEl = document.getElementById('ratio');
-    const stage = document.getElementById('stage');
-    const galleryEl = document.getElementById('gallery');
+  <main>
+    <h2>✨ Welcome to Seedream 4.0</h2>
+    <p>Generate AI-powered images right from your phone. No logins, no subscriptions, completely free.</p>
+    <button onclick="alert('AI Generator Coming Soon!')">Generate a Photo</button>
+  </main>
 
-    let seed = Math.floor(Math.random()*1e9);
-    function dims(kind){
-      if(kind==='landscape') return {w:1440,h:1024};
-      if(kind==='portrait') return {w:1024,h:1440};
-      return {w:1024,h:1024};
-    }
+  <footer>
+    © 2025 Seedream 4.0 — Made by Niraj
+  </footer>
 
-    function urlFor(prompt, model, ratio){
-      const {w,h} = dims(ratio);
-      const qs = new URLSearchParams({
-        model,
-        seed: String(seed),
-        width: String(w),
-        height: String(h),
-        nologo: 'true',
-        private: 'true',
-        enhance: 'true'
-      }).toString();
-      return API + encodeURIComponent(prompt) + '?' + qs + '&t=' + Date.now();
-    }
-
-    function setPreview(src, alt){
-      stage.innerHTML = '';
-      const img = new Image();
-      img.alt = alt || 'Generated image';
-      img.loading = 'eager';
-      img.decoding = 'async';
-      img.style.maxWidth = '100%';
-      img.style.borderRadius = '12px';
-      img.src = src;
-      stage.appendChild(img);
-    }
-
-    async function generate(){
-      const prompt = promptEl.value.trim();
-      if(!prompt){ alert('Write a prompt first.'); return; }
-      const url = urlFor(prompt, modelEl.value, ratioEl.value);
-      stage.innerHTML = '<span class="muted">Generating…</span>';
-      setPreview(url, 'Generated: ' + prompt);
-    }
-
-    function saveToGallery(){
-      const img = stage.querySelector('img');
-      if(!img){ alert('Generate an image first.'); return; }
-      const items = JSON.parse(localStorage.getItem('snapgen-items') || '[]');
-      items.unshift({ url: img.src, prompt: promptEl.value, ts: Date.now() });
-      localStorage.setItem('snapgen-items', JSON.stringify(items.slice(0,60)));
-      renderGallery();
-    }
-
-    function renderGallery(){
-      const items = JSON.parse(localStorage.getItem('snapgen-items') || '[]');
-      galleryEl.innerHTML = '';
-      for(const it of items){
-        const d = document.createElement('div');
-        d.className = 'tile';
-        const im = new Image();
-        im.src = it.url;
-        d.appendChild(im);
-        const cap = document.createElement('div');
-        cap.className = 'cap';
-        cap.textContent = (it.prompt||'').slice(0,60);
-        d.appendChild(cap);
-        galleryEl.appendChild(d);
-      }
-    }
-
-    function clearGallery(){
-      localStorage.removeItem('snapgen-items');
-      renderGallery();
-    }
-
-    async function downloadImage(){
-      const img = stage.querySelector('img');
-      if(!img){ alert('Generate an image first.'); return; }
-      const a = document.createElement('a');
-      a.href = img.src;
-      a.download = 'seedream_'+seed+'.png';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    }
-
-    async function shareImage(){
-      const img = stage.querySelector('img');
-      if(!img){ alert('Generate an image first.'); return; }
-      if(!('share' in navigator)){
-        alert('Sharing not supported on this device. Long-press the image and share from your browser.');
-        return;
-      }
-      try{
-        await navigator.share({
-          title: 'Seedream 4.0 image',
-          text: 'Made with Seedream 4.0 by Niraj',
-          url: img.src
-        });
-      }catch(e){
-        console.log('Share canceled or failed', e);
-      }
-    }
-
-    document.getElementById('go').addEventListener('click', generate);
-    document.getElementById('randomize').addEventListener('click', ()=>{seed=Math.floor(Math.random()*1e9)});
-    document.getElementById('save').addEventListener('click', saveToGallery);
-    document.getElementById('download').addEventListener('click', downloadImage);
-    document.getElementById('share').addEventListener('click', shareImage);
-    document.getElementById('clear').addEventListener('click', clearGallery);
-
-    document.getElementById('install').addEventListener('click', ()=>{
-      alert('Open this page in Chrome, tap the ⋮ menu → "Add to Home screen" to install.');
-    });
-    document.getElementById('how').addEventListener('click', ()=>{
-      alert('Type a prompt → Generate → Save/Download. Use the bottom button to Add to Home Screen.');
-    });
-
-    renderGallery();
-  </script></body>
+</body>
 </html>
