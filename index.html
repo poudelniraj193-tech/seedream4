@@ -70,7 +70,7 @@
 </head>
 <body>
   <header>
-    <img src="Logo.jpg" alt="App Logo" />
+    <img src="icons/icon-192.png" alt="App Logo" />
     <h1>Seedream 4.0</h1>
     <p>Free AI Photo Generator</p>
   </header>
@@ -88,9 +88,7 @@
 
   <script>
     function generatePhoto() {
-      // Random Unsplash image API
       const url = "https://source.unsplash.com/random/600x400/?art,nature,city,technology";
-
       const resultDiv = document.getElementById("result");
       resultDiv.innerHTML = `
         <p>✨ Here’s your generated photo:</p>
@@ -108,6 +106,10 @@
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    }
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
     }
   </script>
 </body>
