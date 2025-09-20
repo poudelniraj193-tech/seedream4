@@ -4,102 +4,118 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Seedream 4.0</title>
+
+  <!-- App Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+
+  <!-- Icons -->
+  <link rel="icon" sizes="192x192" href="icon-192.png">
+  <link rel="icon" sizes="512x512" href="icon-512.png">
+
+  <!-- Styles -->
   <style>
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: linear-gradient(to bottom, #3b82f6, #60a5fa);
       margin: 0;
-      padding: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #3b82f6, #1e3a8a);
       color: white;
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
-    .logo {
-      margin-top: 30px;
-    }
-    .logo img {
-      width: 120px;
-      height: 120px;
+    header img {
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
-      border: 4px solid white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      margin-bottom: 10px;
     }
     h1 {
-      margin: 15px 0 5px;
+      font-size: 2em;
+      margin: 0;
     }
     p {
       margin: 5px 0 20px;
     }
-    .container {
-      background: white;
-      color: black;
-      padding: 25px;
-      border-radius: 15px;
-      width: 90%;
-      max-width: 400px;
-      margin: 20px auto;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
     input {
-      width: 90%;
-      padding: 12px;
+      padding: 10px;
+      width: 80%;
+      max-width: 400px;
       border-radius: 8px;
-      border: 1px solid #ccc;
-      margin-bottom: 10px;
-      font-size: 14px;
+      border: none;
+      margin-bottom: 15px;
+      font-size: 16px;
     }
     button {
-      background: #2563eb;
-      color: white;
-      padding: 12px 25px;
+      padding: 12px 20px;
       border: none;
       border-radius: 8px;
+      background: white;
+      color: #2563eb;
       font-size: 16px;
       cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 20px;
     }
     button:hover {
-      background: #1e40af;
+      background: #e0e7ff;
     }
-    .result {
+    #result {
       margin-top: 20px;
     }
-    .result img {
-      max-width: 100%;
-      border-radius: 10px;
-      margin-top: 10px;
+    #result img {
+      max-width: 90%;
+      border-radius: 12px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.5);
+    }
+    footer {
+      margin-top: auto;
+      font-size: 14px;
+      opacity: 0.8;
+      padding: 15px;
     }
   </style>
 </head>
 <body>
-  <div class="logo">
+  <header>
     <img src="Logo.jpg" alt="App Logo">
-  </div>
-  <h1>Seedream 4.0</h1>
-  <p>✨ Free AI Photo Generator powered by OpenAI ✨</p>
+    <h1>Seedream 4.0</h1>
+    <p>✨ Free AI Photo Generator powered by OpenAI ✨</p>
+  </header>
 
-  <div class="container">
+  <main>
     <input type="text" id="prompt" placeholder="Enter your photo idea...">
-    <br>
-    <button onclick="generatePhoto()">Generate</button>
+    <button onclick="generate()">Generate</button>
+    <div id="result"></div>
+  </main>
 
-    <div class="result">
-      <h3 id="status"></h3>
-      <img id="output" style="display:none;">
-    </div>
-  </div>
+  <footer>
+    © 2025 Seedream 4.0 — Made by Niraj
+  </footer>
 
+  <!-- Service Worker Registration -->
   <script>
-    async function generatePhoto() {
-      const prompt = document.getElementById("prompt").value;
-      const status = document.getElementById("status");
-      const output = document.getElementById("output");
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js")
+        .then(() => console.log("✅ Service Worker Registered"))
+        .catch((err) => console.error("Service Worker Failed:", err));
+    }
+  </script>
 
+  <!-- App Logic -->
+  <script>
+    async function generate() {
+      const prompt = document.getElementById("prompt").value;
       if (!prompt) {
-        alert("Please enter a photo idea!");
+        alert("⚠️ Please enter a prompt!");
         return;
       }
 
-      status.innerText = "⏳ Generating photo...";
-      output.style.display = "none";
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "<p>⏳ Generating your photo...</p>";
 
       try {
         const response = await fetch("/api/generate", {
@@ -109,16 +125,14 @@
         });
 
         const data = await response.json();
-        if (data.imageUrl) {
-          output.src = data.imageUrl;
-          output.style.display = "block";
-          status.innerText = "✅ Done!";
+
+        if (data.error) {
+          resultDiv.innerHTML = `<p style="color:red;">❌ ${data.error}</p>`;
         } else {
-          status.innerText = "❌ Error generating photo.";
+          resultDiv.innerHTML = `<img src="${data.url}" alt="Generated Photo">`;
         }
-      } catch (error) {
-        console.error(error);
-        status.innerText = "⚠️ Failed to connect to API.";
+      } catch (err) {
+        resultDiv.innerHTML = `<p style="color:red;">⚠️ Error generating image</p>`;
       }
     }
   </script>
