@@ -1,179 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seedream 4.0 – Free AI Photo Generator</title>
-
-  <!-- App Icons -->
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="Logo.jpg" type="image/jpeg">
-  <meta name="theme-color" content="#1e69de">
-
-  <!-- Styles -->
+  <title>Seedream 4.0 – Niraj’s Free AI Photo Generator</title>
+  <link rel="manifest" href="manifest.json" />
   <style>
     body {
       margin: 0;
-      font-family: "Segoe UI", Roboto, Arial, sans-serif;
-      background: #f9f9f9;
-      color: #333;
+      font-family: "Segoe UI", Arial, sans-serif;
       text-align: center;
-    }
-
-    /* Splash screen */
-    #splash {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #6db3f2, #1e69de);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
+      background: linear-gradient(to bottom, #0b3d91, #1e90ff);
       color: white;
-      z-index: 9999;
-      opacity: 1;
-      transition: opacity 1s ease;
-    }
-    #splash.fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-    #splash img {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      border: 3px solid #fff;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-    #splash h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-    #splash p {
-      margin: 10px 0;
-      font-size: 16px;
-    }
-    /* Spinner */
-    .spinner {
-      margin-top: 15px;
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid #fff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Main app */
-    #app {
-      display: none;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     header {
-      background: linear-gradient(135deg, #1e69de, #1550a6);
-      color: white;
       padding: 20px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     header img {
-      width: 80px;
-      height: 80px;
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
-      border: 2px solid #fff;
+      border: 3px solid white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
     h1 {
-      margin: 10px 0 0 0;
+      margin: 10px 0 0;
       font-size: 26px;
     }
-    p.sub {
-      margin: 5px 0 15px 0;
-      font-size: 14px;
-      color: #e0e0e0;
-    }
-    main {
-      padding: 20px;
+    p {
+      margin: 5px 0 15px;
     }
     button {
-      background: #1e69de;
-      color: white;
+      padding: 12px 28px;
+      background: white;
+      color: #0b3d91;
       border: none;
-      padding: 14px 24px;
+      border-radius: 25px;
       font-size: 16px;
-      border-radius: 30px;
       cursor: pointer;
-      margin-top: 15px;
-      transition: background 0.3s;
+      font-weight: bold;
+      transition: 0.2s;
+      margin: 10px;
     }
     button:hover {
-      background: #1550a6;
+      background: #f0f0f0;
+      transform: scale(1.05);
+    }
+    #result {
+      margin: 20px auto;
+      max-width: 90%;
+    }
+    #result img {
+      width: 100%;
+      max-width: 420px;
+      border-radius: 12px;
+      margin-top: 15px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
     }
     footer {
-      margin-top: 40px;
-      padding: 10px;
-      font-size: 12px;
-      color: #666;
+      margin: 20px 0;
+      font-size: 14px;
+      color: #ddd;
     }
   </style>
 </head>
 <body>
-
-  <!-- Splash screen -->
-  <div id="splash">
-    <img src="Logo.jpg" alt="App Logo">
+  <header>
+    <img src="Logo.jpg" alt="App Logo" />
     <h1>Seedream 4.0</h1>
-    <p>Loading your dream app...</p>
-    <div class="spinner"></div>
-  </div>
+    <p>Free AI Photo Generator</p>
+  </header>
 
-  <!-- Main App -->
-  <div id="app">
-    <header>
-      <img src="Logo.jpg" alt="App Logo">
-      <h1>Seedream 4.0</h1>
-      <p class="sub">Free AI Photo Generator</p>
-    </header>
+  <main>
+    <h2>✨ Welcome to Seedream 4.0</h2>
+    <p>Generate beautiful photos instantly — no logins, no subscriptions, 100% free.</p>
+    <button onclick="generatePhoto()">Generate a Photo</button>
+    <div id="result"></div>
+  </main>
 
-    <main>
-      <h2>✨ Welcome to Seedream 4.0</h2>
-      <p>Generate AI-powered images right from your phone.  
-         No logins, no subscriptions — completely free.</p>
-      <button onclick="alert('AI Generator Coming Soon!')">Generate a Photo</button>
-    </main>
+  <footer>
+    © 2025 Seedream 4.0 — Made by Niraj
+  </footer>
 
-    <footer>
-      © 2025 Seedream 4.0 — Made by Niraj
-    </footer>
-  </div>
-
-  <!-- Script to fade splash + register service worker -->
   <script>
-    window.addEventListener("load", () => {
-      setTimeout(() => {
-        const splash = document.getElementById("splash");
-        splash.classList.add("fade-out");
-        setTimeout(() => {
-          splash.style.display = "none";
-          document.getElementById("app").style.display = "block";
-        }, 1000);
-      }, 2000);
-    });
+    function generatePhoto() {
+      // Random Unsplash image API
+      const url = "https://source.unsplash.com/random/600x400/?art,nature,city,technology";
 
-    // Register service worker
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("sw.js");
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `
+        <p>✨ Here’s your generated photo:</p>
+        <img id="generatedImg" src="${url}" alt="Generated Photo">
+        <br>
+        <button onclick="downloadPhoto()">Download Photo</button>
+      `;
+    }
+
+    function downloadPhoto() {
+      const img = document.getElementById("generatedImg");
+      const link = document.createElement("a");
+      link.href = img.src;
+      link.download = "Seedream4-Photo.jpg";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   </script>
-
 </body>
 </html>
