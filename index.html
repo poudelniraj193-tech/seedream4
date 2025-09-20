@@ -5,13 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Seedream 4.0</title>
 
-  <!-- App Manifest -->
+  <!-- PWA Manifest -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#2563eb">
-
-  <!-- Icons -->
-  <link rel="icon" sizes="192x192" href="icon-192.png">
-  <link rel="icon" sizes="512x512" href="icon-512.png">
 
   <!-- Styles -->
   <style>
@@ -31,6 +27,7 @@
       width: 100px;
       height: 100px;
       border-radius: 50%;
+      border: 3px solid white;
       margin-bottom: 10px;
     }
     h1 {
@@ -58,7 +55,6 @@
       font-size: 16px;
       cursor: pointer;
       font-weight: bold;
-      margin-bottom: 20px;
     }
     button:hover {
       background: #e0e7ff;
@@ -70,6 +66,7 @@
       max-width: 90%;
       border-radius: 12px;
       box-shadow: 0px 4px 12px rgba(0,0,0,0.5);
+      margin-top: 10px;
     }
     footer {
       margin-top: auto;
@@ -88,6 +85,7 @@
 
   <main>
     <input type="text" id="prompt" placeholder="Enter your photo idea...">
+    <br>
     <button onclick="generate()">Generate</button>
     <div id="result"></div>
   </main>
@@ -109,30 +107,31 @@
   <script>
     async function generate() {
       const prompt = document.getElementById("prompt").value;
+      const resultDiv = document.getElementById("result");
+
       if (!prompt) {
         alert("⚠️ Please enter a prompt!");
         return;
       }
 
-      const resultDiv = document.getElementById("result");
       resultDiv.innerHTML = "<p>⏳ Generating your photo...</p>";
 
       try {
         const response = await fetch("/api/generate", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt })
         });
 
         const data = await response.json();
 
-        if (data.error) {
-          resultDiv.innerHTML = `<p style="color:red;">❌ ${data.error}</p>`;
-        } else {
+        if (data.url) {
           resultDiv.innerHTML = `<img src="${data.url}" alt="Generated Photo">`;
+        } else {
+          resultDiv.innerHTML = `<p style="color:red;">❌ ${data.error || "Something went wrong"}</p>`;
         }
       } catch (err) {
-        resultDiv.innerHTML = `<p style="color:red;">⚠️ Error generating image</p>`;
+        console.error(err);
+        resultDiv.innerHTML = `<p style="color:red;">⚠️ Failed to connect to API.</p>`;
       }
     }
   </script>
