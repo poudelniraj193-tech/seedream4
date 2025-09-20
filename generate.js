@@ -1,43 +1,30 @@
-// /api/generate.js
-import fetch from "node-fetch";
+import OpenAI from "openai";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  const { prompt } = req.body;
+  if (!prompt) {
+    return res.status(400).json({ error: "Prompt is required" });
+  }
+
   try {
-    const { prompt } = req.body;
-
-    if (!prompt || prompt.trim().length === 0) {
-      return res.status(400).json({ error: "Prompt is required" });
-    }
-
-    // Call OpenAI Images API
-    const response = await fetch("https://api.openai.com/v1/images/generations", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`, // keep safe in Vercel
-      },
-      body: JSON.stringify({
-        model: "gpt-image-1", // OpenAI’s image model
-        prompt: prompt,
-        size: "512x512"
-      }),
+    const client = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY, // stored securely in Vercel
     });
 
-    const data = await response.json();
+    const result = await client.images.generate({
+      model: "gpt-image-1",
+      prompt,
+      size: "512x512",
+    });
 
-    if (data.error) {
-      return res.status(500).json({ error: data.error.message });
-    }
-
-    const imageUrl = data.data[0].url;
-    res.status(200).json({ image: imageUrl });
-
+    const imageUrl = result.data[0].url;
+    res.status(200).json({ imageUrl });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
+    console.error("Error generating image:", error);
+    res.status(500).json({ error: "Failed to generate image" });
   }
 }
