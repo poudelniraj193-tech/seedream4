@@ -3,182 +3,128 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Seedream 4.0</title>
-  <link rel="manifest" href="manifest.json">
+  <title>Seedream 4.0 – Free AI Photo Generator</title>
+
+  <!-- Theme -->
   <meta name="theme-color" content="#1a73e8">
+
+  <!-- PWA manifest + icons -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+
+  <!-- Styles -->
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
-      text-align: center;
-      background: linear-gradient(to bottom, #1a73e8, #4285f4);
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #1a73e8, #4285f4);
       color: white;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      text-align: center;
     }
     header {
       padding: 20px;
     }
     .logo {
-      width: 90px;
-      height: 90px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       object-fit: cover;
       border: 3px solid white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
-    h1 { margin: 10px 0 5px; }
-    main { padding: 20px; }
-    input {
-      width: 80%;
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
-      margin-bottom: 10px;
+    h1 {
+      margin: 10px 0 5px;
+      font-size: 28px;
+    }
+    p.sub {
+      margin: 0;
       font-size: 16px;
-    }
-    button {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 25px;
-      font-size: 16px;
-      cursor: pointer;
-      background: white;
-      color: #1a73e8;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-    button:hover { background: #e0e0e0; }
-    #generatedImg {
-      margin-top: 20px;
-      max-width: 90%;
-      border-radius: 12px;
-      border: 3px solid white;
-      display: none;
-    }
-    #spinner {
-      display: none;
-      margin-top: 20px;
-    }
-    .loader {
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid #ffffff;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-      margin: auto;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    #status {
-      margin-top: 10px;
-      font-size: 14px;
       opacity: 0.9;
     }
+    main {
+      padding: 20px;
+    }
+    .btn {
+      display: inline-block;
+      margin: 15px 0;
+      padding: 12px 24px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 25px;
+      background: white;
+      color: #1a73e8;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+    }
+    #result {
+      margin-top: 20px;
+    }
+    #generatedImage {
+      max-width: 90%;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
     footer {
-      margin-top: 40px;
-      padding: 10px;
-      font-size: 14px;
-      opacity: 0.8;
+      margin-top: 30px;
+      font-size: 12px;
+      opacity: 0.7;
     }
   </style>
 </head>
 <body>
+
+  <!-- Header -->
   <header>
     <img src="Logo.jpg" alt="App Logo" class="logo">
     <h1>Seedream 4.0</h1>
-    <p>AI Photo Generator</p>
+    <p class="sub">Free AI Photo Generator</p>
   </header>
 
+  <!-- Main -->
   <main>
-    <h2>✨ Create your dream photo</h2>
-    <input id="prompt" type="text" placeholder="Describe your photo idea...">
-    <br>
-    <button id="generateBtn">Generate</button>
-    <div id="spinner">
-      <div class="loader"></div>
-      <div id="status">Generating your image… please wait ⏳</div>
+    <h2>✨ Welcome to Seedream 4.0</h2>
+    <p>Generate beautiful photos instantly — no logins, no subscriptions, 100% free.</p>
+
+    <button class="btn" onclick="generatePhoto()">🎨 Generate a Photo</button>
+
+    <div id="result">
+      <h3>✨ Here’s your generated photo:</h3>
+      <img id="generatedImage" src="" alt="Generated Photo">
+      <br>
+      <a id="downloadBtn" class="btn" href="#" download="seedream-photo.png" style="display:none;">⬇️ Download Photo</a>
     </div>
-    <img id="generatedImg" src="" alt="Generated Photo">
-    <br>
-    <button id="downloadBtn" style="display:none;">Download Photo</button>
   </main>
 
+  <!-- Footer -->
   <footer>
     © 2025 Seedream 4.0 — Made by Niraj
   </footer>
 
+  <!-- Scripts -->
   <script>
-    // ⚠️ Private API Key (keep safe, best moved to backend later)
-    const HF_API_KEY = "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";
-    const HF_MODEL = "stabilityai/stable-diffusion-2";
-
-    const generateBtn = document.getElementById("generateBtn");
-    const downloadBtn = document.getElementById("downloadBtn");
-    const generatedImg = document.getElementById("generatedImg");
-    const spinner = document.getElementById("spinner");
-
-    generateBtn.addEventListener("click", async () => {
-      const prompt = document.getElementById("prompt").value;
-      if (!prompt) {
-        alert("Please type a description first!");
-        return;
-      }
-
-      // Show loading spinner
-      spinner.style.display = "block";
-      generatedImg.style.display = "none";
-      downloadBtn.style.display = "none";
-      generateBtn.disabled = true;
-
-      try {
-        const response = await fetch(`https://api-inference.huggingface.co/models/${HF_MODEL}`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${HF_API_KEY}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            inputs: prompt,
-            options: { wait_for_model: true },
-            parameters: { width: 512, height: 512 }
-          })
-        });
-
-        if (!response.ok) throw new Error("API request failed");
-
-        const blob = await response.blob();
-        const imgUrl = URL.createObjectURL(blob);
-
-        generatedImg.src = imgUrl;
-        generatedImg.style.display = "block";
-        downloadBtn.style.display = "inline-block";
-      } catch (err) {
-        document.getElementById("status").textContent = "⚠️ Error: " + err.message;
-      }
-
-      // Hide spinner
-      spinner.style.display = "none";
-      generateBtn.disabled = false;
-    });
-
-    downloadBtn.addEventListener("click", () => {
-      const link = document.createElement("a");
-      link.href = generatedImg.src;
-      link.download = "seedream-photo.png";
-      link.click();
-    });
-
-    // Offline support
+    // Register service worker for PWA
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("sw.js");
+      navigator.serviceWorker.register("service-worker.js");
+    }
+
+    // Simple demo generator (replace with Hugging Face API later)
+    function generatePhoto() {
+      const img = document.getElementById("generatedImage");
+      const btn = document.getElementById("downloadBtn");
+
+      // Temporary placeholder image
+      img.src = "https://picsum.photos/500?random=" + Math.floor(Math.random() * 1000);
+      img.style.display = "block";
+
+      // Enable download
+      btn.href = img.src;
+      btn.style.display = "inline-block";
     }
   </script>
+
 </body>
 </html>
