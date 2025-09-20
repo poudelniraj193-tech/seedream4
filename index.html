@@ -156,7 +156,7 @@
     </footer>
   </div>
 
-  <!-- Script to fade splash -->
+  <!-- Script to fade splash + register service worker -->
   <script>
     window.addEventListener("load", () => {
       setTimeout(() => {
@@ -165,9 +165,14 @@
         setTimeout(() => {
           splash.style.display = "none";
           document.getElementById("app").style.display = "block";
-        }, 1000); // wait for fade
-      }, 2000); // splash shows for 2s
+        }, 1000);
+      }, 2000);
     });
+
+    // Register service worker
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
+    }
   </script>
 
 </body>
