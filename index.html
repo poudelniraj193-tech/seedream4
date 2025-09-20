@@ -8,21 +8,83 @@
   <!-- App Icons -->
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="Logo.jpg" type="image/jpeg">
-  <meta name="theme-color" content="#ef4444">
+  <meta name="theme-color" content="#1e69de">
 
   <!-- Styles -->
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
       background: #f9f9f9;
       color: #333;
       text-align: center;
     }
+
+    /* Splash screen */
+    #splash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #6db3f2, #1e69de);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 1s ease;
+    }
+    #splash.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #splash img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    #splash h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    #splash p {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    /* Spinner */
+    .spinner {
+      margin-top: 15px;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Main app */
+    #app {
+      display: none;
+    }
     header {
-      background: #ef4444;
+      background: linear-gradient(135deg, #1e69de, #1550a6);
       color: white;
       padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     header img {
       width: 80px;
@@ -32,27 +94,29 @@
     }
     h1 {
       margin: 10px 0 0 0;
-      font-size: 24px;
+      font-size: 26px;
     }
     p.sub {
       margin: 5px 0 15px 0;
       font-size: 14px;
-      color: #f0f0f0;
+      color: #e0e0e0;
     }
     main {
       padding: 20px;
     }
     button {
-      background: #ef4444;
+      background: #1e69de;
       color: white;
       border: none;
-      padding: 12px 20px;
+      padding: 14px 24px;
       font-size: 16px;
-      border-radius: 6px;
+      border-radius: 30px;
       cursor: pointer;
+      margin-top: 15px;
+      transition: background 0.3s;
     }
     button:hover {
-      background: #d63636;
+      background: #1550a6;
     }
     footer {
       margin-top: 40px;
@@ -64,21 +128,47 @@
 </head>
 <body>
 
-  <header>
+  <!-- Splash screen -->
+  <div id="splash">
     <img src="Logo.jpg" alt="App Logo">
     <h1>Seedream 4.0</h1>
-    <p class="sub">Free AI Photo Generator</p>
-  </header>
+    <p>Loading your dream app...</p>
+    <div class="spinner"></div>
+  </div>
 
-  <main>
-    <h2>✨ Welcome to Seedream 4.0</h2>
-    <p>Generate AI-powered images right from your phone. No logins, no subscriptions, completely free.</p>
-    <button onclick="alert('AI Generator Coming Soon!')">Generate a Photo</button>
-  </main>
+  <!-- Main App -->
+  <div id="app">
+    <header>
+      <img src="Logo.jpg" alt="App Logo">
+      <h1>Seedream 4.0</h1>
+      <p class="sub">Free AI Photo Generator</p>
+    </header>
 
-  <footer>
-    © 2025 Seedream 4.0 — Made by Niraj
-  </footer>
+    <main>
+      <h2>✨ Welcome to Seedream 4.0</h2>
+      <p>Generate AI-powered images right from your phone.  
+         No logins, no subscriptions — completely free.</p>
+      <button onclick="alert('AI Generator Coming Soon!')">Generate a Photo</button>
+    </main>
+
+    <footer>
+      © 2025 Seedream 4.0 — Made by Niraj
+    </footer>
+  </div>
+
+  <!-- Script to fade splash -->
+  <script>
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        const splash = document.getElementById("splash");
+        splash.classList.add("fade-out");
+        setTimeout(() => {
+          splash.style.display = "none";
+          document.getElementById("app").style.display = "block";
+        }, 1000); // wait for fade
+      }, 2000); // splash shows for 2s
+    });
+  </script>
 
 </body>
 </html>
