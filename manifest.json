@@ -1,24 +1,20 @@
 {
   "name": "Seedream 4.0",
   "short_name": "Seedream",
-  "description": "Niraj’s Free Mobile AI Photo Generator",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0b3d91",
-  "theme_color": "#1e90ff",
-  "orientation": "portrait",
+  "background_color": "#1a73e8",
+  "theme_color": "#1a73e8",
   "icons": [
     {
-      "src": "icons/icon-192.png",
+      "src": "Logo.jpg",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/jpeg"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "Logo.jpg",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/jpeg"
     }
   ]
 }
