@@ -1,31 +1,25 @@
-# 🌌 Seedream 4.0
+# 🌌 Seedream 4.0  
+*Niraj’s Free Mobile AI Photo Generator*  
 
-**Niraj’s Free Mobile AI Photo Generator**  
-🚀 Live app: [Seedream 4.0](https://poudelniraj193-tech.github.io/seedream4/)
+![App Logo](./Logo.jpg)  
 
----
-
-## 📖 About
-Seedream 4.0 is a **mobile-first AI photo generator** packaged as a Progressive Web App (PWA).  
-- ✅ Installable like a native app  
-- ✅ Works offline (service worker caching)  
-- ✅ Splash screen with custom logo & gradient  
-- ✅ 100% free, no logins or subscriptions  
+🚀 **Live App:** [Seedream 4.0](https://poudelniraj193-tech.github.io/seedream4/)  
 
 ---
 
-## 📱 Install Instructions
-1. Open the live app in your mobile browser.  
-2. Tap **⋮ → Add to Home Screen** (Android) or **Share → Add to Home Screen** (iOS).  
-3. Launch it from your home screen — it runs like a real app!  
+## 📱 Features
+- Installable as an app (PWA)  
+- Works offline with Service Worker  
+- Smooth splash screen with logo + fade  
+- Simple & mobile-friendly UI  
 
 ---
 
-## 🛠️ Tech Stack
-- HTML5, CSS3, JavaScript  
-- GitHub Pages (hosting)  
-- PWA with `manifest.json` + `sw.js`  
+## 🖼 Preview
+![App Screenshot](./screenshot.png)  
+*(Upload a screenshot of your app as `screenshot.png` to display it here)*  
 
 ---
 
-© 2025 Seedream 4.0 — Made by Niraj
+Made with ❤️ by Niraj  
+© 2025 Seedream 4.0
