@@ -1,77 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seedream 4.0 – Niraj’s Free AI Photo Generator</title>
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#1e90ff" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seedream 4.0</title>
+  <link rel="manifest" href="manifest.json">
   <style>
     body {
+      font-family: Arial, sans-serif;
       margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
+      padding: 0;
       text-align: center;
-      background: linear-gradient(to bottom, #0b3d91, #1e90ff);
+      background: linear-gradient(to bottom, #1a73e8, #4285f4);
       color: white;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
     }
     header {
       padding: 20px;
     }
-    header img {
-      width: 90px;
-      height: 90px;
+    .logo {
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
+      object-fit: cover;
       border: 3px solid white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
     h1 {
-      margin: 10px 0 0;
-      font-size: 26px;
+      margin: 10px 0 5px;
     }
     p {
-      margin: 5px 0 15px;
+      margin: 0;
+      opacity: 0.9;
+    }
+    main {
+      padding: 20px;
     }
     button {
-      padding: 12px 28px;
-      background: white;
-      color: #0b3d91;
+      padding: 12px 24px;
+      margin: 10px;
       border: none;
       border-radius: 25px;
       font-size: 16px;
       cursor: pointer;
+      background: white;
+      color: #1a73e8;
       font-weight: bold;
-      transition: 0.2s;
-      margin: 10px;
+      transition: 0.3s;
     }
     button:hover {
-      background: #f0f0f0;
-      transform: scale(1.05);
+      background: #e0e0e0;
     }
-    #result {
-      margin: 20px auto;
+    #generatedImg {
+      margin-top: 20px;
       max-width: 90%;
-    }
-    #result img {
-      width: 100%;
-      max-width: 420px;
       border-radius: 12px;
-      margin-top: 15px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+      border: 3px solid white;
+      display: none;
     }
     footer {
-      margin: 20px 0;
+      margin-top: 40px;
+      padding: 10px;
       font-size: 14px;
-      color: #ddd;
+      opacity: 0.8;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="icons/icon-192.png" alt="App Logo" />
+    <!-- Your uploaded Logo.jpg -->
+    <img src="Logo.jpg" alt="App Logo" class="logo">
     <h1>Seedream 4.0</h1>
     <p>Free AI Photo Generator</p>
   </header>
@@ -79,8 +75,12 @@
   <main>
     <h2>✨ Welcome to Seedream 4.0</h2>
     <p>Generate beautiful photos instantly — no logins, no subscriptions, 100% free.</p>
-    <button onclick="generatePhoto()">Generate a Photo</button>
-    <div id="result"></div>
+
+    <button id="generateBtn">Generate a Photo</button>
+    <br>
+    <img id="generatedImg" src="" alt="Generated Photo">
+    <br>
+    <button id="downloadBtn" style="display:none;">Download Photo</button>
   </main>
 
   <footer>
@@ -88,33 +88,23 @@
   </footer>
 
   <script>
-    function generatePhoto() {
-      // Random Unsplash image API
-      const url = "https://source.unsplash.com/random/600x400/?art,nature,city,technology";
+    const generateBtn = document.getElementById("generateBtn");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const generatedImg = document.getElementById("generatedImg");
 
-      const resultDiv = document.getElementById("result");
-      resultDiv.innerHTML = `
-        <p>✨ Here’s your generated photo:</p>
-        <img id="generatedImg" src="${url}" alt="Generated Photo">
-        <br>
-        <button onclick="downloadPhoto()">Download Photo</button>
-      `;
-    }
+    generateBtn.addEventListener("click", () => {
+      // Show random demo image
+      generatedImg.src = "https://picsum.photos/400/300?random=" + Date.now();
+      generatedImg.style.display = "block";
+      downloadBtn.style.display = "inline-block";
+    });
 
-    function downloadPhoto() {
-      const img = document.getElementById("generatedImg");
+    downloadBtn.addEventListener("click", () => {
       const link = document.createElement("a");
-      link.href = img.src;
-      link.download = "Seedream4-Photo.jpg";
-      document.body.appendChild(link);
+      link.href = generatedImg.src;
+      link.download = "generated-photo.jpg";
       link.click();
-      document.body.removeChild(link);
-    }
-
-    // Register service worker for offline support
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("sw.js");
-    }
+    });
   </script>
 </body>
 </html>
