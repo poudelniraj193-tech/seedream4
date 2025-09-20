@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Seedream 4.0 – Niraj’s Free AI Photo Generator</title>
   <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#1e90ff" />
   <style>
     body {
       margin: 0;
@@ -88,7 +89,9 @@
 
   <script>
     function generatePhoto() {
+      // Random Unsplash image API
       const url = "https://source.unsplash.com/random/600x400/?art,nature,city,technology";
+
       const resultDiv = document.getElementById("result");
       resultDiv.innerHTML = `
         <p>✨ Here’s your generated photo:</p>
@@ -108,6 +111,7 @@
       document.body.removeChild(link);
     }
 
+    // Register service worker for offline support
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("sw.js");
     }
