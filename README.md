@@ -1,27 +1,19 @@
-# 🌌 Seedream 4.0  
+# 🌌 Seedream 4.0
+**Free AI Photo Generator powered by OpenAI & Vercel**  
+Made by **Niraj** ✨  
 
-![App Logo](./icons/icon-192.png)  
-
-**Niraj’s Free Mobile AI Photo Generator**  
-Mobile-first, fast, and 100% free.
-
-🔗 **Live app:** [Seedream 4.0](https://poudelniraj193-tech.github.io/seedream4/)  
+Seedream 4.0 lets you type *any idea* and instantly generate an AI-powered photo.  
+It’s lightweight, mobile-friendly, and installable as a **PWA app** on Android/iOS.  
 
 ---
 
 ## 🚀 Features
-- 📲 Installable as an app (PWA)  
-- ⚡ Works offline with Service Worker  
-- 🎨 Splash screen + neat design  
-- 🖼 One-click photo generator + download  
+- 🎨 AI photo generation using OpenAI’s `gpt-image-1`
+- 📱 Works on desktop & mobile
+- 🖼️ Downloadable, high-quality images
+- ⚡ Fast, secure backend via **Vercel serverless functions**
+- 📲 Installable as a **PWA app** (Add to Home Screen)
 
 ---
 
-## 📥 Install as App
-1. Open the [Live App](https://poudelniraj193-tech.github.io/seedream4/) in Chrome.  
-2. Tap **⋮ → Add to Home Screen**.  
-3. Launch **Seedream 4.0** like a real app.  
-
----
-
-💡 Made with ❤️ by **Niraj**
+## 🛠️ Project Structure
