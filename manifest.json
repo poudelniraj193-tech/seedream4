@@ -1,14 +1,14 @@
 {
   "name": "Seedream 4.0",
   "short_name": "Seedream",
-  "start_url": "./index.html",
+  "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#111827",
-  "theme_color": "#ef4444",
+  "background_color": "#6db3f2",
+  "theme_color": "#1e69de",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "logo.jpg",
+      "src": "Logo.jpg",
       "sizes": "512x512",
       "type": "image/jpeg"
     }
