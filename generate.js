@@ -1,3 +1,4 @@
+// /api/generate.js
 import OpenAI from "openai";
 
 export default async function handler(req, res) {
@@ -5,26 +6,28 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { prompt } = req.body;
-  if (!prompt) {
-    return res.status(400).json({ error: "Prompt is required" });
-  }
-
   try {
+    const { prompt } = JSON.parse(req.body);
+
+    if (!prompt) {
+      return res.status(400).json({ error: "Prompt is required" });
+    }
+
     const client = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY, // stored securely in Vercel
+      apiKey: process.env.OPENAI_API_KEY, // from Vercel environment
     });
 
-    const result = await client.images.generate({
-      model: "gpt-image-1",
+    // Call OpenAI Images API
+    const response = await client.images.generate({
+      model: "gpt-image-1",   // ✅ correct model for image generation
       prompt,
-      size: "512x512",
+      size: "512x512",        // you can change to "1024x1024"
     });
 
-    const imageUrl = result.data[0].url;
-    res.status(200).json({ imageUrl });
+    // Send the first image URL back
+    res.status(200).json({ imageUrl: response.data[0].url });
   } catch (error) {
-    console.error("Error generating image:", error);
+    console.error("Image generation error:", error);
     res.status(500).json({ error: "Failed to generate image" });
   }
 }
