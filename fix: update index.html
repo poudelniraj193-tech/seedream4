@@ -8,57 +8,63 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background: linear-gradient(to bottom, #4facfe, #00f2fe);
+      background: linear-gradient(to bottom, #007bff, #003366);
       color: white;
       margin: 0;
       padding: 0;
     }
     .container {
-      margin-top: 80px;
+      margin-top: 100px;
     }
     input {
       padding: 10px;
-      width: 280px;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 5px;
       border: none;
-      border-radius: 6px;
-      margin-bottom: 10px;
     }
     button {
+      margin-top: 15px;
       padding: 10px 20px;
+      background: yellow;
       border: none;
-      background: #ffcc00;
-      color: black;
+      border-radius: 5px;
       font-weight: bold;
-      border-radius: 6px;
       cursor: pointer;
     }
-    button:hover {
-      background: #ffdd33;
-    }
-    #result {
-      margin-top: 20px;
-    }
     img {
+      margin-top: 20px;
       max-width: 90%;
       border-radius: 10px;
-      margin-top: 20px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.5);
+    }
+    .error {
+      margin-top: 15px;
+      color: red;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>✨ Seedream 4.0 ✨</h1>
-    <p>Free AI Photo Generator powered by OpenAI</p>
+    <img src="Logo.jpg" alt="Logo" width="120" style="border-radius:50%; margin-bottom:20px;">
+    <h1>Seedream 4.0</h1>
+    <p>✨ Free AI Photo Generator powered by OpenAI ✨</p>
     <input id="prompt" type="text" placeholder="Enter your photo idea..." />
     <br />
     <button onclick="generateImage()">Generate</button>
     <div id="result"></div>
+    <div id="error" class="error"></div>
   </div>
 
   <script>
     async function generateImage() {
       const prompt = document.getElementById("prompt").value;
-      document.getElementById("result").innerText = "⏳ Generating...";
+      const resultDiv = document.getElementById("result");
+      const errorDiv = document.getElementById("error");
+
+      resultDiv.innerHTML = "";
+      errorDiv.innerText = "";
 
       try {
         const response = await fetch("/api/generate", {
@@ -68,15 +74,14 @@
         });
 
         const data = await response.json();
-        if (data.imageUrl) {
-          document.getElementById("result").innerHTML =
-            `<img src="${data.imageUrl}" alt="Generated Image"/>`;
+
+        if (response.ok) {
+          resultDiv.innerHTML = `<img src="${data.imageUrl}" alt="Generated Image"/>`;
         } else {
-          document.getElementById("result").innerText =
-            "⚠️ " + (data.error || "Failed to generate image.");
+          errorDiv.innerText = data.error || "⚠️ Error generating image";
         }
       } catch (err) {
-        document.getElementById("result").innerText = "❌ Error: " + err.message;
+        errorDiv.innerText = "⚠️ Failed to connect to API.";
       }
     }
   </script>
