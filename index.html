@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Seedream 4.0</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon-192.png" />
@@ -10,79 +10,94 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background: linear-gradient(to bottom, #1e90ff, #00008b);
+      background: linear-gradient(to bottom, #3b82f6, #1e3a8a);
       color: white;
       margin: 0;
       padding: 0;
     }
     .container {
-      margin-top: 100px;
+      max-width: 600px;
+      margin: 80px auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+    }
+    h1 {
+      margin-bottom: 5px;
+    }
+    .subtitle {
+      font-size: 14px;
+      margin-bottom: 20px;
+      color: #facc15;
     }
     input {
+      width: 80%;
       padding: 10px;
-      width: 250px;
-      border-radius: 5px;
       border: none;
-      font-size: 16px;
+      border-radius: 6px;
+      margin-bottom: 10px;
     }
     button {
       padding: 10px 20px;
-      margin-left: 10px;
       border: none;
-      border-radius: 5px;
-      background: white;
-      color: #1e90ff;
+      background: #facc15;
+      color: black;
       font-weight: bold;
+      border-radius: 6px;
       cursor: pointer;
     }
-    img {
-      margin-top: 20px;
-      max-width: 90%;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    button:hover {
+      background: #eab308;
     }
-    .error {
+    #result {
       margin-top: 20px;
-      color: red;
-      font-weight: bold;
+    }
+    img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img src="Logo.jpg" width="120" style="border-radius:50%;" />
+    <img src="Logo.jpg" alt="Logo" style="width:100px;height:100px;border-radius:50%;" />
     <h1>Seedream 4.0</h1>
-    <p>✨ Free AI Photo Generator powered by OpenAI ✨</p>
-    <input id="prompt" placeholder="Enter your photo idea..." />
-    <button onclick="generate()">Generate</button>
+    <p class="subtitle">✨ Free AI Photo Generator powered by OpenAI ✨</p>
+    <input id="prompt" type="text" placeholder="Enter your photo idea..." />
+    <br />
+    <button onclick="generateImage()">Generate</button>
     <div id="result"></div>
   </div>
 
   <script>
-    async function generate() {
+    async function generateImage() {
       const prompt = document.getElementById("prompt").value;
       const resultDiv = document.getElementById("result");
-      resultDiv.innerHTML = "⏳ Generating...";
+      resultDiv.innerHTML = "<p>⏳ Generating...</p>";
 
       try {
-        const res = await fetch("/api/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const response = await fetch("/api/generate", {
+          method: "POST",   // ✅ FIXED to POST
+          headers: {
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({ prompt })
         });
 
-        if (!res.ok) {
-          throw new Error("API error: " + res.status);
+        if (!response.ok) {
+          throw new Error("API error: " + response.status);
         }
 
-        const data = await res.json();
-        if (data.image) {
-          resultDiv.innerHTML = `<img src="${data.image}" alt="Generated"/>`;
+        const data = await response.json();
+
+        if (data.imageUrl) {
+          resultDiv.innerHTML = `<img src="${data.imageUrl}" alt="Generated Image" />`;
         } else {
-          resultDiv.innerHTML = `<p class="error">⚠️ Error generating image</p>`;
+          resultDiv.innerHTML = `<p style="color:red;">⚠️ Error: ${data.error}</p>`;
         }
       } catch (err) {
-        resultDiv.innerHTML = `<p class="error">⚠️ ${err.message}</p>`;
+        resultDiv.innerHTML = `<p style="color:red;">⚠️ ${err.message}</p>`;
       }
     }
   </script>
