@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Seedream 4.0</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon-192.png" />
@@ -10,27 +10,28 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background: linear-gradient(to bottom, #1e3c72, #2a5298);
+      background: linear-gradient(to bottom, #1e90ff, #00008b);
       color: white;
       margin: 0;
       padding: 0;
     }
     .container {
-      margin-top: 50px;
+      margin-top: 100px;
     }
     input {
       padding: 10px;
-      width: 70%;
+      width: 250px;
       border-radius: 5px;
       border: none;
-      margin-bottom: 15px;
+      font-size: 16px;
     }
     button {
       padding: 10px 20px;
+      margin-left: 10px;
       border: none;
       border-radius: 5px;
-      background: #fff;
-      color: #2a5298;
+      background: white;
+      color: #1e90ff;
       font-weight: bold;
       cursor: pointer;
     }
@@ -38,35 +39,30 @@
       margin-top: 20px;
       max-width: 90%;
       border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
     }
     .error {
+      margin-top: 20px;
       color: red;
-      margin-top: 15px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img src="Logo.jpg" alt="logo" width="120" style="border-radius:50%;"><br>
+    <img src="Logo.jpg" width="120" style="border-radius:50%;" />
     <h1>Seedream 4.0</h1>
     <p>✨ Free AI Photo Generator powered by OpenAI ✨</p>
-
-    <input type="text" id="prompt" placeholder="Enter your photo idea..." />
-    <br>
-    <button onclick="generateImage()">Generate</button>
-
-    <p id="error" class="error"></p>
-    <img id="result" src="" alt="">
+    <input id="prompt" placeholder="Enter your photo idea..." />
+    <button onclick="generate()">Generate</button>
+    <div id="result"></div>
   </div>
 
   <script>
-    async function generateImage() {
+    async function generate() {
       const prompt = document.getElementById("prompt").value;
-      const errorEl = document.getElementById("error");
-      const resultImg = document.getElementById("result");
-      errorEl.textContent = "";
-      resultImg.src = "";
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "⏳ Generating...";
 
       try {
         const res = await fetch("/api/generate", {
@@ -75,16 +71,18 @@
           body: JSON.stringify({ prompt })
         });
 
-        if (!res.ok) throw new Error("API request failed");
+        if (!res.ok) {
+          throw new Error("API error: " + res.status);
+        }
 
         const data = await res.json();
         if (data.image) {
-          resultImg.src = data.image;
+          resultDiv.innerHTML = `<img src="${data.image}" alt="Generated"/>`;
         } else {
-          errorEl.textContent = "⚠️ Error generating image";
+          resultDiv.innerHTML = `<p class="error">⚠️ Error generating image</p>`;
         }
       } catch (err) {
-        errorEl.textContent = "⚠️ Failed to connect to API.";
+        resultDiv.innerHTML = `<p class="error">⚠️ ${err.message}</p>`;
       }
     }
   </script>
