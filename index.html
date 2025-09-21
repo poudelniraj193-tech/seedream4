@@ -1,139 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Seedream 4.0</title>
-
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#2563eb">
-
-  <!-- Styles -->
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #3b82f6, #1e3a8a);
-      color: white;
-      text-align: center;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    header img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      border: 3px solid white;
-      margin-bottom: 10px;
-    }
-    h1 {
-      font-size: 2em;
-      margin: 0;
-    }
-    p {
-      margin: 5px 0 20px;
-    }
-    input {
-      padding: 10px;
-      width: 80%;
-      max-width: 400px;
-      border-radius: 8px;
-      border: none;
-      margin-bottom: 15px;
-      font-size: 16px;
-    }
-    button {
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      background: white;
-      color: #2563eb;
-      font-size: 16px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    button:hover {
-      background: #e0e7ff;
-    }
-    #result {
-      margin-top: 20px;
-    }
-    #result img {
-      max-width: 90%;
-      border-radius: 12px;
-      box-shadow: 0px 4px 12px rgba(0,0,0,0.5);
-      margin-top: 10px;
-    }
-    footer {
-      margin-top: auto;
-      font-size: 14px;
-      opacity: 0.8;
-      padding: 15px;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <img src="Logo.jpg" alt="App Logo">
-    <h1>Seedream 4.0</h1>
-    <p>✨ Free AI Photo Generator powered by OpenAI ✨</p>
-  </header>
-
-  <main>
-    <input type="text" id="prompt" placeholder="Enter your photo idea...">
-    <br>
-    <button onclick="generate()">Generate</button>
-    <div id="result"></div>
-  </main>
-
-  <footer>
-    © 2025 Seedream 4.0 — Made by Niraj
-  </footer>
-
-  <!-- Service Worker Registration -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
   <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js")
-        .then(() => console.log("✅ Service Worker Registered"))
-        .catch((err) => console.error("Service Worker Failed:", err));
-    }
-  </script>
-
-  <!-- App Logic -->
-  <script>
-    async function generate() {
+    async function generateImage() {
       const prompt = document.getElementById("prompt").value;
       const resultDiv = document.getElementById("result");
+      const img = document.getElementById("generatedImage");
+      const errorMsg = document.getElementById("errorMsg");
 
-      if (!prompt) {
-        alert("⚠️ Please enter a prompt!");
-        return;
-      }
-
-      resultDiv.innerHTML = "<p>⏳ Generating your photo...</p>";
+      resultDiv.style.display = "none";
+      errorMsg.style.display = "none";
 
       try {
         const response = await fetch("/api/generate", {
           method: "POST",
-          body: JSON.stringify({ prompt })
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt }),
         });
 
         const data = await response.json();
 
-        if (data.url) {
-          resultDiv.innerHTML = `<img src="${data.url}" alt="Generated Photo">`;
+        if (response.ok && data.url) {
+          img.src = data.url;
+          resultDiv.style.display = "block";
         } else {
-          resultDiv.innerHTML = `<p style="color:red;">❌ ${data.error || "Something went wrong"}</p>`;
+          errorMsg.innerText = "⚠️ " + (data.error || "Error generating image");
+          errorMsg.style.display = "block";
         }
       } catch (err) {
-        console.error(err);
-        resultDiv.innerHTML = `<p style="color:red;">⚠️ Failed to connect to API.</p>`;
+        errorMsg.innerText = "⚠️ Failed to connect to API.";
+        errorMsg.style.display = "block";
       }
     }
   </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(to bottom, #4facfe, #00f2fe);
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      margin-top: 50px;
+    }
+    input {
+      padding: 10px;
+      width: 70%;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 8px;
+      background: white;
+      color: #0078ff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #result img {
+      margin-top: 20px;
+      max-width: 90%;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    #errorMsg {
+      margin-top: 20px;
+      color: #ffcccc;
+      font-weight: bold;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="Logo.jpg" alt="App Logo" width="120" style="border-radius:50%;box-shadow:0 4px 8px rgba(0,0,0,0.3)" />
+    <h1>Seedream 4.0</h1>
+    <p>✨ Free AI Photo Generator powered by OpenAI ✨</p>
+
+    <input id="prompt" type="text" placeholder="Enter your photo idea..." />
+    <br/>
+    <button onclick="generateImage()">Generate</button>
+
+    <div id="errorMsg"></div>
+
+    <div id="result" style="display:none;">
+      <h3>Here’s your generated photo:</h3>
+      <img id="generatedImage" src="" alt="Generated AI" />
+    </div>
+  </div>
 </body>
 </html>
